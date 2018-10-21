@@ -9,26 +9,19 @@ Support for Android only as iOS does not provide API for accessing call history
 
 To use this plugin, add `call_log` as a [dependency in your `pubspec.yaml` file](https://flutter.io/platform-plugins/).
 
-Make sure you add the following permission to your Android Manifest:
+You may add the following permission to your Android Manifest:
 
 ```xml
 <uses-permission android:name="android.permission.READ_CALL_LOG" />
 ```
 
-This plugin is able to handle permissions by itself using checkPermission and requestPermission methods.
-Another way to handle permissions is for example [simple_permissions](https://pub.dartlang.org/packages/simple_permissions) plugin.
+This plugin is able to handle checking and requesting permission automatically.
 
 ## Example
 
 ``` dart
 // IMPORT PACKAGE
 import 'package:call_log/call_log.dart';
-
-// CHECK IF PERMISSION IS GRANTED
-bool result = await CallLog.checkPermission();
-
-// REQUEST PERMISSION
-bool result = await CallLog.requestPermission();
 
 // GET WHOLE CALL LOG
 Iterable<CallLogEntry> entries = await CallLog.get();
@@ -50,7 +43,7 @@ Iterable<CallLogEntry> entries = await CallLog.query(
 
 ## Todo
 
-- [x] query call log using most common fields, using AND as logical gate
+- [x] query call log using most common fields, using AND as a logical gate
 - [ ] query call log with full power of native API
 
 ## Contribution and Support
