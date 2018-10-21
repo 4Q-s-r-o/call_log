@@ -1,5 +1,5 @@
 name: call_log
-description: A Flutter plugin to access and query call history log
+description: A Flutter plugin to access and query call history log. Currently enabled query params are dateFrom, dateTo, durationFrom, durationTo, name and number. String params are queried using LIKE and '%' wildcard on both sides. Support for Android only as iOS does not provide API for accessing call history. 
 version: 1.0.0
 author: 4Q Core Team <core@4q.sk>
 homepage: https://github.com/4Q-s-r-o/call_log

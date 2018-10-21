@@ -1,3 +1,9 @@
+## 1.0.1
+
+* documentation modifications based on flutter package analysis
+* code reformat using flutter format
+* Query log entries based on 'type' attribute
+
 ## 1.0.0
 
 * Initial release
