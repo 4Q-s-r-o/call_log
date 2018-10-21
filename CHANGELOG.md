@@ -1,3 +1,7 @@
+## 1.0.2
+
+* more details in README.md
+
 ## 1.0.1
 
 * documentation modifications based on flutter package analysis

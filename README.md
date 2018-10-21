@@ -15,7 +15,9 @@ You may add the following permission to your Android Manifest:
 <uses-permission android:name="android.permission.READ_CALL_LOG" />
 ```
 
-This plugin is able to handle checking and requesting permission automatically.
+This plugin is able to handle checking and requesting permission automatically.\
+Currently implemented query params are dateFrom, dateTo, durationFrom, durationTo, name and number.\
+String params are queried using LIKE and '%' wildcard on both sides.
 
 ## Example
 
