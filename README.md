@@ -3,7 +3,7 @@
 [![pub package](https://img.shields.io/pub/v/call_log.svg)](https://pub.dartlang.org/packages/call_log)
 
 A Flutter plugin to access and query call history log.\
-Suport for Android only as iOS does not provide API for accessing call history
+Support for Android only as iOS does not provide API for accessing call history
 
 ## Usage
 
