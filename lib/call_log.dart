@@ -37,7 +37,6 @@ class CallLog {
       "type": type?.index == null ? null : (type.index + 1).toString(),
     };
     Iterable records = await _channel.invokeMethod('query', params);
-    print('QUERY: ${params}');
     return records?.map((m) => CallLogEntry.fromMap(m));
   }
 }
