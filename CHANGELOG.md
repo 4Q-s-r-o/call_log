@@ -1,3 +1,10 @@
+## 1.0.4
+* documentation modifications
+
+## 1.0.3
+
+* fixing NullPointerException when onRequestPermissionsResult was triggered by different plugin than this one
+
 ## 1.0.2
 
 * more details in README.md
