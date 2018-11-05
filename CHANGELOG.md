@@ -1,3 +1,6 @@
+## 1.0.5
+* bugfixes
+
 ## 1.0.4
 * documentation modifications
 
