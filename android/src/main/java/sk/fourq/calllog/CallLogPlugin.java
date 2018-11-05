@@ -63,7 +63,7 @@ public class CallLogPlugin implements MethodCallHandler, PluginRegistry.RequestP
             handleCall();
             return true;
         } else {
-            result.error(PERMISSION_NOT_GRANTED, null, null);
+            result?.error(PERMISSION_NOT_GRANTED, null, null);
             cleanup();
             return false;
         }
