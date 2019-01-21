@@ -60,7 +60,9 @@ public class CallLogPlugin implements MethodCallHandler, PluginRegistry.RequestP
     @Override
     public boolean onRequestPermissionsResult(int requestCode, String[] strings, int[] grantResults) {
         if (requestCode == 0 && grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            handleCall();
+            if (request != null) {
+                handleCall();
+            }
             return true;
         } else {
             if (result != null) {
