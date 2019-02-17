@@ -33,7 +33,7 @@ android {
 
     defaultConfig {
         applicationId "sk.fourq.calllogexample"
-        minSdkVersion 23
+        minSdkVersion 19
         targetSdkVersion 27
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
