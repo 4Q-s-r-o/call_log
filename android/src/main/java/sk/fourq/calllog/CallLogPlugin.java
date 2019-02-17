@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-@TargetApi(Build.VERSION_CODES.LOLLIPOP)
+@TargetApi(Build.VERSION_CODES.M)
 public class CallLogPlugin implements MethodCallHandler, PluginRegistry.RequestPermissionsResultListener {
 
     private static final String ALREADY_RUNNING = "ALREADY_RUNNING";
