@@ -1,3 +1,7 @@
+## 2.0.0
+* Migration from ```android.support``` packages to ```androidx``` packages that allows this library to be used with flutter projects that use ```androidx```. If you need to stay on ```android.support``` for whatever reason, don't upgrade as it may break your build. [See more](https://flutter.io/docs/development/packages-and-plugins/androidx-compatibility).  
+* Lowered minSdkVersion as requested per [#1](https://github.com/4Q-s-r-o/call_log/issues/1)
+
 ## 1.0.5
 * bugfixes
 

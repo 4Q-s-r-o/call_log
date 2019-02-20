@@ -25,7 +25,7 @@ apply plugin: 'com.android.application'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
-    compileSdkVersion 27
+    compileSdkVersion 28
 
     lintOptions {
         disable 'InvalidPackage'
@@ -33,8 +33,8 @@ android {
 
     defaultConfig {
         applicationId "sk.fourq.calllogexample"
-        minSdkVersion 23
-        targetSdkVersion 27
+        minSdkVersion 16
+        targetSdkVersion 28
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
