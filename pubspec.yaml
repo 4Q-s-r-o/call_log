@@ -1,6 +1,6 @@
 name: call_log
 description: A Flutter plugin to access and query call history log. Support for Android only as iOS does not provide API for accessing call history.
-version: 2.0.0
+version: 2.0.1
 author: 4Q Core Team <core@4q.sk>
 homepage: https://github.com/4Q-s-r-o/call_log
 
