@@ -1,3 +1,6 @@
+## 2.0.3
+* Add more CallLog Calls enums
+
 ## 2.0.2
 * Fix CallLog.Calls.CACHED_MATCHED_NUMBER to CallLog.Calls.NUMBER
 
