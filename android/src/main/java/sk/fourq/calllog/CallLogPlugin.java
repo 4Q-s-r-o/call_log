@@ -128,7 +128,7 @@ public class CallLogPlugin implements MethodCallHandler, PluginRegistry.RequestP
 
     private static final String[] PROJECTION = {
             CallLog.Calls.CACHED_FORMATTED_NUMBER,
-            CallLog.Calls.CACHED_MATCHED_NUMBER,
+            CallLog.Calls.NUMBER,
             CallLog.Calls.TYPE,
             CallLog.Calls.DATE,
             CallLog.Calls.DURATION,

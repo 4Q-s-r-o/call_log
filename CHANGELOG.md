@@ -1,3 +1,6 @@
+## 2.0.2
+* Fix CallLog.Calls.CACHED_MATCHED_NUMBER to CallLog.Calls.NUMBER
+
 ## 2.0.1
 * Fix callType forced value to unknown in case it is not within the range of the available enum values
 
