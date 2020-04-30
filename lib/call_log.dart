@@ -64,7 +64,7 @@ class CallLogEntry {
     name = m['name'];
     number = m['number'];
     formattedNumber = m['formattedNumber'];
-    callType = CallType.values[m['callType'] - 1];
+    callType = m['callType'] < 1 || m['callType'] > 8 ? CallType.unknown : CallType.values[m['callType'] - 1];
     duration = m['duration'];
     timestamp = m['timestamp'];
   }
@@ -78,5 +78,6 @@ enum CallType {
   voiceMail,
   rejected,
   blocked,
-  answeredExternally
+  answeredExternally,
+  unknown
 }
