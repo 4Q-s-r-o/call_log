@@ -1,3 +1,6 @@
+## 2.0.4
+* Add the new CallLog Calls to the rest of the code logic
+
 ## 2.0.3
 * Add more CallLog Calls enums
 
