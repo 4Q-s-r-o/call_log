@@ -128,11 +128,13 @@ public class CallLogPlugin implements MethodCallHandler, PluginRegistry.RequestP
 
     private static final String[] PROJECTION = {
             CallLog.Calls.CACHED_FORMATTED_NUMBER,
-            CallLog.Calls.CACHED_MATCHED_NUMBER,
+            CallLog.Calls.NUMBER,
             CallLog.Calls.TYPE,
             CallLog.Calls.DATE,
             CallLog.Calls.DURATION,
-            CallLog.Calls.CACHED_NAME
+            CallLog.Calls.CACHED_NAME,
+            CallLog.Calls.CACHED_NUMBER_TYPE,
+            CallLog.Calls.CACHED_NUMBER_LABEL
     };
 
     private void queryLogs(String query) {
@@ -152,6 +154,8 @@ public class CallLogPlugin implements MethodCallHandler, PluginRegistry.RequestP
                 map.put("timestamp", cursor.getLong(3));
                 map.put("duration", cursor.getInt(4));
                 map.put("name", cursor.getString(5));
+                map.put("cachedNumberType", cursor.getInt(6));
+                map.put("cachedNumberLabel", cursor.getInt(7));
                 entries.add(map);
             }
             result.success(entries);
