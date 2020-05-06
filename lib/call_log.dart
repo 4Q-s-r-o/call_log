@@ -2,8 +2,7 @@ import 'dart:async';
 import 'package:flutter/services.dart';
 
 class CallLog {
-  static const MethodChannel _channel =
-      const MethodChannel('sk.fourq.call_log');
+  static const MethodChannel _channel = const MethodChannel('sk.fourq.call_log');
 
   /// Get all call history log entries. Permissions are handled automatically
   static Future<Iterable<CallLogEntry>> get() async {
@@ -71,12 +70,4 @@ class CallLogEntry {
 }
 
 /// All possible call types
-enum CallType {
-  incoming,
-  outgoing,
-  missed,
-  voiceMail,
-  rejected,
-  blocked,
-  answeredExternally
-}
+enum CallType { incoming, outgoing, missed, voiceMail, rejected, blocked, answeredExternally }

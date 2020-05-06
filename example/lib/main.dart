@@ -19,7 +19,8 @@ class _MyAppState extends State<MyApp> {
         Column(
           children: <Widget>[
             Divider(),
-            Text('NUMBER   : ${entry.formattedNumber}', style: mono),
+            Text('F. NUMBER: ${entry.formattedNumber}', style: mono),
+            Text('NUMBER   : ${entry.number}', style: mono),
             Text('NAME     : ${entry.name}', style: mono),
             Text('TYPE     : ${entry.callType}', style: mono),
             Text('DATE     : ${DateTime.fromMillisecondsSinceEpoch(entry.timestamp)}', style: mono),
