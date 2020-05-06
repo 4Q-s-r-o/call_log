@@ -18,15 +18,18 @@ class CallLog {
   /// name: call participant name (present only if in contacts)
   /// number: call participant phone number
   /// type: value from [CallType] enum
-  static Future<Iterable<CallLogEntry>> query({
-    int dateFrom,
-    int dateTo,
-    int durationFrom,
-    int durationTo,
-    String name,
-    String number,
-    CallType type,
-  }) async {
+  static Future<Iterable<CallLogEntry>> query(
+      {int dateFrom,
+      int dateTo,
+      int durationFrom,
+      int durationTo,
+      String name,
+      String number,
+      CallType type,
+      String numbertype,
+      String numberlabel,
+      String cachedNumberType,
+      String cachedNumberLabel}) async {
     var params = {
       "dateFrom": dateFrom?.toString(),
       "dateTo": dateTo?.toString(),
@@ -35,6 +38,8 @@ class CallLog {
       "name": name,
       "number": number,
       "type": type?.index == null ? null : (type.index + 1).toString(),
+      "cachedNumberType": cachedNumberType,
+      "cachedNumberLabel": cachedNumberLabel,
     };
     Iterable records = await _channel.invokeMethod('query', params);
     return records?.map((m) => CallLogEntry.fromMap(m));
@@ -50,6 +55,8 @@ class CallLogEntry {
     this.callType,
     this.duration,
     this.timestamp,
+    this.cachedNumberType,
+    this.cachedNumberLabel,
   });
 
   String name;
@@ -58,16 +65,31 @@ class CallLogEntry {
   CallType callType;
   int duration;
   int timestamp;
+  int cachedNumberType;
+  String cachedNumberLabel;
 
   CallLogEntry.fromMap(Map m) {
     name = m['name'];
     number = m['number'];
     formattedNumber = m['formattedNumber'];
-    callType = CallType.values[m['callType'] - 1];
+    callType = m['callType'] < 1 || m['callType'] > 8
+        ? CallType.unknown
+        : CallType.values[m['callType'] - 1];
     duration = m['duration'];
     timestamp = m['timestamp'];
+    cachedNumberType = m['cachedNumberType'];
+    cachedNumberLabel = m['cachedNumberLabel'];
   }
 }
 
 /// All possible call types
-enum CallType { incoming, outgoing, missed, voiceMail, rejected, blocked, answeredExternally }
+enum CallType {
+  incoming,
+  outgoing,
+  missed,
+  voiceMail,
+  rejected,
+  blocked,
+  answeredExternally,
+  unknown,
+}
