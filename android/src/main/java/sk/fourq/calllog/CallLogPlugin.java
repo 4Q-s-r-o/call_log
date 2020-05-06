@@ -135,6 +135,7 @@ public class CallLogPlugin implements MethodCallHandler, PluginRegistry.RequestP
             CallLog.Calls.CACHED_NAME,
             CallLog.Calls.CACHED_NUMBER_TYPE,
             CallLog.Calls.CACHED_NUMBER_LABEL
+
     };
 
     private void queryLogs(String query) {
@@ -155,7 +156,7 @@ public class CallLogPlugin implements MethodCallHandler, PluginRegistry.RequestP
                 map.put("duration", cursor.getInt(4));
                 map.put("name", cursor.getString(5));
                 map.put("cachedNumberType", cursor.getInt(6));
-                map.put("cachedNumberLabel", cursor.getInt(7));
+                map.put("cachedNumberLabel", cursor.getString(7));
                 entries.add(map);
             }
             result.success(entries);

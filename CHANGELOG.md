@@ -1,3 +1,11 @@
+
+
+## 2.0.2
+* Multiple fixes and new features from Filipe Picoito Jorge
+    * Fix callType forced value to unknown in case it is not within the range of the available enum values
+    * Add the new CallLog Calls to the rest of the code logic
+    * Add more CallLog Calls enums
+
 ## 2.0.1
 * updated CallLog types
 
