@@ -1,4 +1,5 @@
-
+## 2.1.0
+* Added ```CACHED_MATCHED_NUMBER``` to query and response objects
 
 ## 2.0.2
 * Multiple fixes and new features from Filipe Picoito Jorge
