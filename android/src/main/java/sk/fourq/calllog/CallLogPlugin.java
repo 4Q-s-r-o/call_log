@@ -86,6 +86,7 @@ public class CallLogPlugin implements MethodCallHandler, PluginRegistry.RequestP
                 String name = request.argument("name");
                 String number = request.argument("number");
                 String type = request.argument("type");
+                String cachedMatchedNumber = request.argument("cachedMatchedNumber");
 
                 List<String> predicates = new ArrayList<>();
                 if (dateFrom != null) {
@@ -105,6 +106,9 @@ public class CallLogPlugin implements MethodCallHandler, PluginRegistry.RequestP
                 }
                 if (number != null) {
                     predicates.add(CallLog.Calls.NUMBER + " LIKE '%" + number + "%'");
+                }
+                if (cachedMatchedNumber != null) {
+                    predicates.add(CallLog.Calls.CACHED_MATCHED_NUMBER + " LIKE '%" + number + "%'");
                 }
                 if (type != null) {
                     predicates.add(CallLog.Calls.TYPE + " = " + type);
@@ -134,8 +138,8 @@ public class CallLogPlugin implements MethodCallHandler, PluginRegistry.RequestP
             CallLog.Calls.DURATION,
             CallLog.Calls.CACHED_NAME,
             CallLog.Calls.CACHED_NUMBER_TYPE,
-            CallLog.Calls.CACHED_NUMBER_LABEL
-
+            CallLog.Calls.CACHED_NUMBER_LABEL,
+            CallLog.Calls.CACHED_MATCHED_NUMBER
     };
 
     private void queryLogs(String query) {
@@ -157,6 +161,7 @@ public class CallLogPlugin implements MethodCallHandler, PluginRegistry.RequestP
                 map.put("name", cursor.getString(5));
                 map.put("cachedNumberType", cursor.getInt(6));
                 map.put("cachedNumberLabel", cursor.getString(7));
+                map.put("cachedMatchedNumber", cursor.getString(8));
                 entries.add(map);
             }
             result.success(entries);
