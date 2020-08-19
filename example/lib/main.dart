@@ -3,22 +3,24 @@ import 'package:flutter/material.dart';
 
 void main() => runApp(MyApp());
 
+/// example widget for call log plugin
 class MyApp extends StatefulWidget {
+  @override
   _MyAppState createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
-  Iterable<CallLogEntry> _callLogEntries = [];
+  Iterable<CallLogEntry> _callLogEntries = <CallLogEntry>[];
 
   @override
   Widget build(BuildContext context) {
-    var mono = TextStyle(fontFamily: 'monospace');
-    var children = <Widget>[];
-    _callLogEntries.forEach((entry) {
+    const TextStyle mono = TextStyle(fontFamily: 'monospace');
+    final List<Widget> children = <Widget>[];
+    for (CallLogEntry entry in _callLogEntries) {
       children.add(
         Column(
           children: <Widget>[
-            Divider(),
+            const Divider(),
             Text('F. NUMBER  : ${entry.formattedNumber}', style: mono),
             Text('C.M. NUMBER: ${entry.cachedMatchedNumber}', style: mono),
             Text('NUMBER     : ${entry.number}', style: mono),
@@ -32,11 +34,11 @@ class _MyAppState extends State<MyApp> {
           mainAxisAlignment: MainAxisAlignment.start,
         ),
       );
-    });
+    }
 
     return MaterialApp(
       home: Scaffold(
-        appBar: AppBar(title: Text('call_log example')),
+        appBar: AppBar(title: const Text('call_log example')),
         body: SingleChildScrollView(
           child: Column(
             children: <Widget>[
@@ -45,12 +47,12 @@ class _MyAppState extends State<MyApp> {
                   padding: const EdgeInsets.all(8.0),
                   child: RaisedButton(
                     onPressed: () async {
-                      var result = await CallLog.query();
+                      final Iterable<CallLogEntry> result = await CallLog.query();
                       setState(() {
                         _callLogEntries = result;
                       });
                     },
-                    child: Text("Get all"),
+                    child: const Text('Get all'),
                   ),
                 ),
               ),
