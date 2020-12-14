@@ -6,6 +6,8 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.os.Build;
 import android.provider.CallLog;
+import android.telephony.SubscriptionInfo;
+import android.telephony.SubscriptionManager;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
@@ -49,17 +51,28 @@ public class CallLogPlugin implements MethodCallHandler, PluginRegistry.RequestP
         request = c;
         result = r;
 
-        if (PackageManager.PERMISSION_GRANTED == registrar.activity().checkSelfPermission(Manifest.permission.READ_CALL_LOG)) {
+        String[] perm = {Manifest.permission.READ_CALL_LOG, Manifest.permission.READ_PHONE_STATE};
+        if (hasPermissions(perm)) {
             handleCall();
         } else {
-            String[] perm = {Manifest.permission.READ_CALL_LOG};
             registrar.activity().requestPermissions(perm, 0);
         }
     }
 
+    private boolean hasPermissions(String[] permissions) {
+        for(String perm : permissions) {
+            if (PackageManager.PERMISSION_GRANTED != registrar.activity().checkSelfPermission(Manifest.permission.READ_CALL_LOG)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     @Override
     public boolean onRequestPermissionsResult(int requestCode, String[] strings, int[] grantResults) {
-        if (requestCode == 0 && grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+        if (requestCode == 0 && grantResults.length == 2 && 
+            grantResults[0] == PackageManager.PERMISSION_GRANTED &&
+            grantResults[1] == PackageManager.PERMISSION_GRANTED) {
             if (request != null) {
                 handleCall();
             }
@@ -139,10 +152,15 @@ public class CallLogPlugin implements MethodCallHandler, PluginRegistry.RequestP
             CallLog.Calls.CACHED_NAME,
             CallLog.Calls.CACHED_NUMBER_TYPE,
             CallLog.Calls.CACHED_NUMBER_LABEL,
-            CallLog.Calls.CACHED_MATCHED_NUMBER
+            CallLog.Calls.CACHED_MATCHED_NUMBER,
+            CallLog.Calls.PHONE_ACCOUNT_ID
     };
 
     private void queryLogs(String query) {
+
+        SubscriptionManager subscriptionManager = registrar.context().getSystemService(SubscriptionManager.class);
+        List<SubscriptionInfo> subscriptions = subscriptionManager.getActiveSubscriptionInfoList();
+
         try (Cursor cursor = registrar.context().getContentResolver().query(
                 CallLog.Calls.CONTENT_URI,
                 PROJECTION,
@@ -162,6 +180,7 @@ public class CallLogPlugin implements MethodCallHandler, PluginRegistry.RequestP
                 map.put("cachedNumberType", cursor.getInt(6));
                 map.put("cachedNumberLabel", cursor.getString(7));
                 map.put("cachedMatchedNumber", cursor.getString(8));
+                map.put("simDisplayName", getSimDisplayName(subscriptions, cursor.getString(9)));
                 entries.add(map);
             }
             result.success(entries);
@@ -170,6 +189,18 @@ public class CallLogPlugin implements MethodCallHandler, PluginRegistry.RequestP
             result.error(INTERNAL_ERROR, e.getMessage(), null);
             cleanup();
         }
+    }
+
+    private String getSimDisplayName(List<SubscriptionInfo> subscriptions, String accountId) {
+        if (accountId != null) {
+            for(SubscriptionInfo info : subscriptions) {
+                if (Integer.toString(info.getSubscriptionId()).equals(accountId) ||
+                        accountId.contains(info.getIccId())) {
+                    return String.valueOf(info.getDisplayName());
+                }
+            }
+        }
+        return null;
     }
 
     private void cleanup() {
