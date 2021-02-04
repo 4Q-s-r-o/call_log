@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:flutter/services.dart';
 
 /// main call_log plugin class

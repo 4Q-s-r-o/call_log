@@ -1,4 +1,9 @@
 ## 2.1.0
+* Background execution support. Please note that is impossible for plugin to ask user for permission while in background
+* phoneAccountId in response (by asiriPiyajanaka)
+* SIM display name in response (by balee)
+
+## 2.1.0
 * Added ```CACHED_MATCHED_NUMBER``` to query and response objects
 
 ## 2.0.2

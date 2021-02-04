@@ -19,6 +19,10 @@ This plugin is able to handle checking and requesting permission automatically.\
 Currently implemented query params are dateFrom, dateTo, durationFrom, durationTo, name and number.\
 String params are queried using LIKE and '%' wildcard on both sides.
 
+ ## Background execution
+
+This plugin may be used in flutter background engine, via plugins like WorkManager. But please note that it is impossible for plugin to request permission while it is executed in background. You have to manually request permissions READ_CALL_LOG and READ_PHONE_STATE
+
 ## Example
 
 ``` dart
