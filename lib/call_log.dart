@@ -62,6 +62,7 @@ class CallLogEntry {
     this.timestamp,
     this.cachedNumberType,
     this.cachedNumberLabel,
+    this.simDisplayName
   });
 
   /// constructor creating object from provided map
@@ -77,6 +78,7 @@ class CallLogEntry {
     cachedNumberType = m['cachedNumberType'];
     cachedNumberLabel = m['cachedNumberLabel'];
     cachedMatchedNumber = m['cachedMatchedNumber'];
+    simDisplayName = m['simDisplayName'];
   }
 
   /// contact name
@@ -105,6 +107,9 @@ class CallLogEntry {
 
   /// todo comment
   String cachedMatchedNumber;
+
+  /// SIM display name
+  String simDisplayName;
 }
 
 /// All possible call types
