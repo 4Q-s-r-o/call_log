@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 
 /// main call_log plugin class
 class CallLog {
-  static const MethodChannel _channel = MethodChannel('sk.fourq.call_log');
+  static const MethodChannel _channel = const MethodChannel('sk.fourq.call_log');
 
   /// Get all call history log entries. Permissions are handled automatically
   static Future<Iterable<CallLogEntry>> get() async {
@@ -32,6 +32,7 @@ class CallLog {
     String cachedNumberType,
     String cachedNumberLabel,
     String cachedMatchedNumber,
+    String phoneAccountId,
   }) async {
     final Map<String, String> params = <String, String>{
       'dateFrom': dateFrom?.toString(),
@@ -44,6 +45,7 @@ class CallLog {
       'cachedNumberType': cachedNumberType,
       'cachedNumberLabel': cachedNumberLabel,
       'cachedMatchedNumber': cachedMatchedNumber,
+      'phoneAccountId': phoneAccountId,
     };
     final Iterable<dynamic> records = await _channel.invokeMethod('query', params);
     return records?.map((dynamic m) => CallLogEntry.fromMap(m));
@@ -62,7 +64,8 @@ class CallLogEntry {
     this.timestamp,
     this.cachedNumberType,
     this.cachedNumberLabel,
-    this.simDisplayName
+    this.simDisplayName,
+    this.phoneAccountId,
   });
 
   /// constructor creating object from provided map
@@ -79,6 +82,7 @@ class CallLogEntry {
     cachedNumberLabel = m['cachedNumberLabel'];
     cachedMatchedNumber = m['cachedMatchedNumber'];
     simDisplayName = m['simDisplayName'];
+    phoneAccountId = m['phoneAccountId'];
   }
 
   /// contact name
@@ -110,6 +114,9 @@ class CallLogEntry {
 
   /// SIM display name
   String simDisplayName;
+
+  /// PHONE account id
+  String phoneAccountId;
 }
 
 /// All possible call types

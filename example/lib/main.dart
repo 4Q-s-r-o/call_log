@@ -29,6 +29,7 @@ class _MyAppState extends State<MyApp> {
             Text('DATE       : ${DateTime.fromMillisecondsSinceEpoch(entry.timestamp)}',
                 style: mono),
             Text('DURATION   : ${entry.duration}', style: mono),
+            Text('ACCOUNT ID : ${entry.phoneAccountId}', style: mono),
             Text('SIM NAME   : ${entry.simDisplayName}', style: mono),
           ],
           crossAxisAlignment: CrossAxisAlignment.start,
