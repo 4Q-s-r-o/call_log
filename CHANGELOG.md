@@ -1,4 +1,4 @@
-## 2.1.0
+## 2.2.0
 * Background execution support. Please note that is impossible for plugin to ask user for permission while in background
 * phoneAccountId in response (by asiriPiyajanaka)
 * SIM display name in response (by balee)
