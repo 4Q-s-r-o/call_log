@@ -61,6 +61,7 @@ public class CallLogPlugin implements MethodCallHandler, PluginRegistry.RequestP
 
     private boolean hasPermissions(String[] permissions) {
         for(String perm : permissions) {
+
             if (PackageManager.PERMISSION_GRANTED != registrar.activity().checkSelfPermission(Manifest.permission.READ_CALL_LOG)) {
                 return false;
             }
@@ -70,7 +71,7 @@ public class CallLogPlugin implements MethodCallHandler, PluginRegistry.RequestP
 
     @Override
     public boolean onRequestPermissionsResult(int requestCode, String[] strings, int[] grantResults) {
-        if (requestCode == 0 && grantResults.length == 2 && 
+        if (requestCode == 0 && grantResults.length == 2 &&
             grantResults[0] == PackageManager.PERMISSION_GRANTED &&
             grantResults[1] == PackageManager.PERMISSION_GRANTED) {
             if (request != null) {
@@ -100,6 +101,7 @@ public class CallLogPlugin implements MethodCallHandler, PluginRegistry.RequestP
                 String number = request.argument("number");
                 String type = request.argument("type");
                 String cachedMatchedNumber = request.argument("cachedMatchedNumber");
+                String phoneAccountId = request.argument("phoneAccountId");
 
                 List<String> predicates = new ArrayList<>();
                 if (dateFrom != null) {
@@ -122,6 +124,9 @@ public class CallLogPlugin implements MethodCallHandler, PluginRegistry.RequestP
                 }
                 if (cachedMatchedNumber != null) {
                     predicates.add(CallLog.Calls.CACHED_MATCHED_NUMBER + " LIKE '%" + number + "%'");
+                }
+                if (phoneAccountId != null) {
+                    predicates.add(CallLog.Calls.PHONE_ACCOUNT_ID + " LIKE '%" + number + "%'");
                 }
                 if (type != null) {
                     predicates.add(CallLog.Calls.TYPE + " = " + type);
@@ -181,6 +186,7 @@ public class CallLogPlugin implements MethodCallHandler, PluginRegistry.RequestP
                 map.put("cachedNumberLabel", cursor.getString(7));
                 map.put("cachedMatchedNumber", cursor.getString(8));
                 map.put("simDisplayName", getSimDisplayName(subscriptions, cursor.getString(9)));
+                map.put("phoneAccountId", cursor.getString(9));
                 entries.add(map);
             }
             result.success(entries);
