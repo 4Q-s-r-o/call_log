@@ -8,6 +8,10 @@ import android.os.Build;
 import android.provider.CallLog;
 import android.telephony.SubscriptionInfo;
 import android.telephony.SubscriptionManager;
+
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
@@ -56,7 +60,8 @@ public class CallLogPlugin implements MethodCallHandler, PluginRegistry.RequestP
             handleCall();
         } else {
             if(registrar.activity() != null){
-                registrar.activity().requestPermissions(perm, 0);
+                ActivityCompat.requestPermissions(
+                registrar.activity(), perm, 0);
             } else {
                 r.error("MISSING_PERMISSIONS", "Permission READ_CALL_LOG or READ_PHONE_STATE is required for plugin. Hovewer, plugin is unable to request permission because of background execution.", null);
             }
@@ -65,7 +70,7 @@ public class CallLogPlugin implements MethodCallHandler, PluginRegistry.RequestP
 
     private boolean hasPermissions(String[] permissions) {
         for(String perm : permissions) {
-            if (PackageManager.PERMISSION_GRANTED != registrar.activeContext().checkSelfPermission(perm)) {
+            if (PackageManager.PERMISSION_GRANTED != ContextCompat.checkSelfPermission(registrar.activeContext(), perm)) {
                 return false;
             }
         }
@@ -170,7 +175,7 @@ public class CallLogPlugin implements MethodCallHandler, PluginRegistry.RequestP
 
     private void queryLogs(String query) {
 
-        SubscriptionManager subscriptionManager = registrar.context().getSystemService(SubscriptionManager.class);
+        SubscriptionManager subscriptionManager = ContextCompat.getSystemService(registrar.context(), SubscriptionManager.class);
         List<SubscriptionInfo> subscriptions = subscriptionManager.getActiveSubscriptionInfoList();
 
         try (Cursor cursor = registrar.context().getContentResolver().query(
