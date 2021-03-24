@@ -1,3 +1,6 @@
+## 3.0.0-nullsafety
+* Migration to null safety
+
 ## 2.2.1
 * Fixed null pointer on android API level 22 and bellow (by ponnamkarthik)
 
