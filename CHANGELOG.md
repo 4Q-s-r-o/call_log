@@ -1,3 +1,6 @@
+## 2.2.1
+* Fixed null pointer on android API level 22 and bellow (by ponnamkarthik)
+
 ## 2.2.0
 * Background execution support. Please note that is impossible for plugin to ask user for permission while in background
 * phoneAccountId in response (by asiriPiyajanaka)
