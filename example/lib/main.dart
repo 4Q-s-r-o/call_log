@@ -5,10 +5,10 @@ import 'package:workmanager/workmanager.dart';
 
 ///TOP-LEVEL FUNCTION PROVIDED FOR WORK MANAGER AS CALLBACK
 void callbackDispatcher() {
-  Workmanager.executeTask((task, inputData) async {
+  Workmanager.executeTask((dynamic task, dynamic inputData) async {
     print('Background Services are Working!');
     try {
-      Iterable<CallLogEntry> cLog = await CallLog.get();
+      final Iterable<CallLogEntry> cLog = await CallLog.get();
       print('Queried call log entries');
       for (CallLogEntry entry in cLog) {
         print('-------------------------------------');
@@ -19,6 +19,7 @@ void callbackDispatcher() {
         print('TYPE       : ${entry.callType}');
         print('DATE       : ${DateTime.fromMillisecondsSinceEpoch(entry.timestamp)}');
         print('DURATION   : ${entry.duration}');
+        print('ACCOUNT ID : ${entry.phoneAccountId}');
         print('ACCOUNT ID : ${entry.phoneAccountId}');
         print('SIM NAME   : ${entry.simDisplayName}');
         print('-------------------------------------');
@@ -81,7 +82,7 @@ class _MyAppState extends State<MyApp> {
               Center(
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: RaisedButton(
+                  child: ElevatedButton(
                     onPressed: () async {
                       final Iterable<CallLogEntry> result = await CallLog.query();
                       setState(() {
@@ -95,7 +96,7 @@ class _MyAppState extends State<MyApp> {
               Center(
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: RaisedButton(
+                  child: ElevatedButton(
                     onPressed: () {
                       Workmanager.registerOneOffTask(
                         DateTime.now().millisecondsSinceEpoch.toString(),

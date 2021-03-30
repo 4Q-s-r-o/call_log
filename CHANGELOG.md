@@ -1,3 +1,6 @@
+## 3.0.1
+* Decreased lower bound for  dart
+
 ## 3.0.0
 * Stable release of null safety
 
