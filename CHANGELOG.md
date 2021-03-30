@@ -1,3 +1,6 @@
+## 3.0.0
+* Stable release of null safety
+
 ## 3.0.0-nullsafety
 * Migration to null safety
 
