@@ -4,7 +4,8 @@ import 'package:flutter/services.dart';
 
 /// main call_log plugin class
 class CallLog {
-  static const Iterable<CallLogEntry> _EMPTY_RESULT = Iterable<CallLogEntry>.empty();
+  static const Iterable<CallLogEntry> _EMPTY_RESULT =
+      Iterable<CallLogEntry>.empty();
   static const MethodChannel _channel = MethodChannel('sk.fourq.call_log');
 
   /// Get all call history log entries. Permissions are handled automatically
@@ -49,8 +50,26 @@ class CallLog {
       'cachedMatchedNumber': cachedMatchedNumber,
       'phoneAccountId': phoneAccountId,
     };
-    final Iterable<dynamic>? records = await _channel.invokeMethod('query', params);
-    return records?.map((dynamic m) => CallLogEntry.fromMap(m)) ?? _EMPTY_RESULT;
+    final Iterable<dynamic>? records =
+        await _channel.invokeMethod('query', params);
+    return records?.map((dynamic m) => CallLogEntry.fromMap(m)) ??
+        _EMPTY_RESULT;
+  }
+}
+
+///method for returning the callType
+CallType getCallType(int n) {
+  
+  if (n == 100) {
+    //return the wifi outgoing call
+    return CallType.wifiOutgoing;
+  } else if (n == 101) {
+    //return wifiIncoming call
+    return CallType.wifiIncoming;
+  } else if (n >= 1 && n <= 8) {
+    return CallType.values[n - 1];
+  } else {
+    return CallType.unknown;
   }
 }
 
@@ -75,9 +94,7 @@ class CallLogEntry {
     name = m['name'];
     number = m['number'];
     formattedNumber = m['formattedNumber'];
-    callType = m['callType'] < 1 || m['callType'] > 8
-        ? CallType.unknown
-        : CallType.values[m['callType'] - 1];
+    callType = getCallType(m['callType']);
     duration = m['duration'];
     timestamp = m['timestamp'];
     cachedNumberType = m['cachedNumberType'];
@@ -146,4 +163,10 @@ enum CallType {
 
   /// unknown type of call
   unknown,
+
+  /// wifi incoming
+  wifiIncoming,
+
+  ///wifi outgoing
+  wifiOutgoing,
 }
