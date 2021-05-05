@@ -1,3 +1,5 @@
+## 3.0.3
+* Correct detection of ``wifiIncomming`` and ``wifiOutgoing`` call types (sanjay23singh)
 ## 3.0.2
 * Removed deprecated file
 
