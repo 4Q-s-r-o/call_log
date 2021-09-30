@@ -1,3 +1,7 @@
+##3.1.0
+* Fixed null pointer on some devices that will not return subscriptions list
+* Added new DateTime parameters (dateTimeFrom/dateTimeTo) as an alternative to milisecond ones (dateFrom/dateTo)
+
 ## 3.0.3
 * Correct detection of ``wifiIncomming`` and ``wifiOutgoing`` call types (sanjay23singh)
 ## 3.0.2
