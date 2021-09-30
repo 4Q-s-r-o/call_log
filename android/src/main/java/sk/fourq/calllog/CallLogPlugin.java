@@ -210,7 +210,7 @@ public class CallLogPlugin implements MethodCallHandler, PluginRegistry.RequestP
     }
 
     private String getSimDisplayName(List<SubscriptionInfo> subscriptions, String accountId) {
-        if (accountId != null) {
+        if (accountId != null && subscriptions != null) {
             for(SubscriptionInfo info : subscriptions) {
                 if (Integer.toString(info.getSubscriptionId()).equals(accountId) ||
                         accountId.contains(info.getIccId())) {
