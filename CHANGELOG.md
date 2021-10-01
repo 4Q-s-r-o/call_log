@@ -1,3 +1,7 @@
+## 3.2.0
+* Migration to v2 embedding
+* Minor native code refactoring
+
 ##3.1.0
 * Fixed null pointer on some devices that will not return subscriptions list
 * Added new DateTime parameters (dateTimeFrom/dateTimeTo) as an alternative to milisecond ones (dateFrom/dateTo)
