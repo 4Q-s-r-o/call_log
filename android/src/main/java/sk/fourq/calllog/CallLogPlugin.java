@@ -190,7 +190,7 @@ public class CallLogPlugin implements FlutterPlugin, ActivityAware, MethodCallHa
                 generatePredicate(predicates, CallLog.Calls.CACHED_MATCHED_NUMBER, OPERATOR_LIKE, number);
                 generatePredicate(predicates, CallLog.Calls.PHONE_ACCOUNT_ID, OPERATOR_LIKE, number);
                 generatePredicate(predicates, CallLog.Calls.TYPE, OPERATOR_EQUALS, type);
-                queryLogs(StringUtils.join(predicates, "AND"));
+                queryLogs(StringUtils.join(predicates, " AND "));
                 break;
             default:
                 result.notImplemented();
