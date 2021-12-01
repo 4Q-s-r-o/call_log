@@ -86,6 +86,7 @@ public class CallLogPlugin implements FlutterPlugin, ActivityAware, MethodCallHa
     public void onAttachedToActivity(@NonNull ActivityPluginBinding activityPluginBinding) {
         this.activityPluginBinding = activityPluginBinding;
         activityPluginBinding.addRequestPermissionsResultListener(this);
+        activity = activityPluginBinding.getActivity();
         Log.d(TAG, "onAttachedToActivity");
     }
 
@@ -105,6 +106,7 @@ public class CallLogPlugin implements FlutterPlugin, ActivityAware, MethodCallHa
         if (activityPluginBinding != null) {
             activityPluginBinding.removeRequestPermissionsResultListener(this);
             activityPluginBinding = null;
+            activity = null;
         }
     }
 
