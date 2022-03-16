@@ -188,10 +188,14 @@ public class CallLogPlugin implements FlutterPlugin, ActivityAware, MethodCallHa
                 generatePredicate(predicates, CallLog.Calls.DURATION, OPERATOR_GT, durationFrom);
                 generatePredicate(predicates, CallLog.Calls.DURATION, OPERATOR_LT, durationTo);
                 generatePredicate(predicates, CallLog.Calls.CACHED_NAME, OPERATOR_LIKE, name);
-                generatePredicate(predicates, CallLog.Calls.NUMBER, OPERATOR_LIKE, number);
-                generatePredicate(predicates, CallLog.Calls.CACHED_MATCHED_NUMBER, OPERATOR_LIKE, number);
-                generatePredicate(predicates, CallLog.Calls.PHONE_ACCOUNT_ID, OPERATOR_LIKE, number);
                 generatePredicate(predicates, CallLog.Calls.TYPE, OPERATOR_EQUALS, type);
+                if (!number.isEmpty()) {
+                    List<String> namePredicates = new ArrayList<>();
+                    generatePredicate(namePredicates, CallLog.Calls.NUMBER, OPERATOR_LIKE, number);
+                    generatePredicate(namePredicates, CallLog.Calls.CACHED_MATCHED_NUMBER, OPERATOR_LIKE, number);
+                    generatePredicate(namePredicates, CallLog.Calls.PHONE_ACCOUNT_ID, OPERATOR_LIKE, number);
+                    predicates.add("(" + StringUtils.join(namePredicates, " OR ") + ")");
+                }
                 queryLogs(StringUtils.join(predicates, " AND "));
                 break;
             default:
