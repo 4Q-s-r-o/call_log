@@ -1,3 +1,6 @@
+## 3.2.3
+* Fixed incorrect querying for number (haorendashu)
+
 ## 3.2.2
 * Fixed incorrect permission handling on v2 embedding (re-ynd)
 

@@ -189,7 +189,7 @@ public class CallLogPlugin implements FlutterPlugin, ActivityAware, MethodCallHa
                 generatePredicate(predicates, CallLog.Calls.DURATION, OPERATOR_LT, durationTo);
                 generatePredicate(predicates, CallLog.Calls.CACHED_NAME, OPERATOR_LIKE, name);
                 generatePredicate(predicates, CallLog.Calls.TYPE, OPERATOR_EQUALS, type);
-                if (!number.isEmpty()) {
+                if (!StringUtils.isEmpty(number)) {
                     List<String> namePredicates = new ArrayList<>();
                     generatePredicate(namePredicates, CallLog.Calls.NUMBER, OPERATOR_LIKE, number);
                     generatePredicate(namePredicates, CallLog.Calls.CACHED_MATCHED_NUMBER, OPERATOR_LIKE, number);
