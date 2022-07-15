@@ -1,3 +1,8 @@
+## 4.0.0
+* Upgraded to flutter 3.0
+* Bumped work manager in example to latest version
+* Removed old flutter embedding v1 support 
+
 ## 3.2.3
 * Fixed incorrect querying for number (haorendashu)
 

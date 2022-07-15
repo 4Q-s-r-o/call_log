@@ -23,7 +23,6 @@ import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugin.common.PluginRegistry;
-import io.flutter.plugin.common.PluginRegistry.Registrar;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
@@ -108,15 +107,6 @@ public class CallLogPlugin implements FlutterPlugin, ActivityAware, MethodCallHa
             activityPluginBinding = null;
             activity = null;
         }
-    }
-
-    @Deprecated
-    public static void registerWith(Registrar registrar) {
-        Log.d(TAG, "registerWith");
-        CallLogPlugin callLogPlugin = new CallLogPlugin();
-        callLogPlugin.init(registrar.messenger(), registrar.activeContext());
-        callLogPlugin.activity = registrar.activity();
-        registrar.addRequestPermissionsResultListener(callLogPlugin);
     }
 
     @Override

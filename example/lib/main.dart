@@ -5,7 +5,7 @@ import 'package:workmanager/workmanager.dart';
 
 ///TOP-LEVEL FUNCTION PROVIDED FOR WORK MANAGER AS CALLBACK
 void callbackDispatcher() {
-  Workmanager.executeTask((dynamic task, dynamic inputData) async {
+  Workmanager().executeTask((dynamic task, dynamic inputData) async {
     print('Background Services are Working!');
     try {
       final Iterable<CallLogEntry> cLog = await CallLog.get();
@@ -35,7 +35,7 @@ void callbackDispatcher() {
 
 void main() {
   runApp(MyApp());
-  Workmanager.initialize(callbackDispatcher, isInDebugMode: true);
+  Workmanager().initialize(callbackDispatcher, isInDebugMode: true);
 }
 
 /// example widget for call log plugin
@@ -98,7 +98,7 @@ class _MyAppState extends State<MyApp> {
                   padding: const EdgeInsets.all(8.0),
                   child: ElevatedButton(
                     onPressed: () {
-                      Workmanager.registerOneOffTask(
+                      Workmanager().registerOneOffTask(
                         DateTime.now().millisecondsSinceEpoch.toString(),
                         'simpleTask',
                         existingWorkPolicy: ExistingWorkPolicy.replace,
