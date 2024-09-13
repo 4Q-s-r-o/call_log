@@ -84,7 +84,7 @@ CallType getCallType(int n) {
   }
 }
 
-/// PODO for one call log entry
+/// TODO for one call log entry
 class CallLogEntry {
   /// constructor
   CallLogEntry({
@@ -102,8 +102,15 @@ class CallLogEntry {
 
   /// constructor creating object from provided map
   CallLogEntry.fromMap(Map<dynamic, dynamic> m) {
-    name = m['name'];
     number = m['number'];
+
+    // Check if number is null or empty and set name accordingly
+    if (number == null || number!.isEmpty) {
+      name = '番号非通知';
+    } else {
+      name = m['name'];
+    }
+
     formattedNumber = m['formattedNumber'];
     callType = getCallType(m['callType']);
     duration = m['duration'];
