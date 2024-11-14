@@ -28,6 +28,8 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
+import java.util.HashSet;
 
 @TargetApi(Build.VERSION_CODES.M)
 public class CallLogPlugin implements FlutterPlugin, ActivityAware, MethodCallHandler, PluginRegistry.RequestPermissionsResultListener {
@@ -213,7 +215,12 @@ public class CallLogPlugin implements FlutterPlugin, ActivityAware, MethodCallHa
                 CallLog.Calls.DATE + " DESC"
         )) {
             List<HashMap<String, Object>> entries = new ArrayList<>();
+            Set<Long> timestamps = new HashSet<>();
             while (cursor != null && cursor.moveToNext()) {
+                if (timestamps.contains(cursor.getLong(3))) {
+                    continue;
+                }
+                timestamps.add(cursor.getLong(3));
                 HashMap<String, Object> map = new HashMap<>();
                 map.put("formattedNumber", cursor.getString(0));
                 map.put("number", cursor.getString(1));
