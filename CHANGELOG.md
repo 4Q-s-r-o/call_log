@@ -1,5 +1,8 @@
+## 5.0.0
+* Upgraded to flutter 2.29
+
 ## 4.0.0
-* Upgraded to flutter 3.0
+* Upgraded to flutter 2.7
 * Bumped work manager in example to latest version
 * Removed old flutter embedding v1 support 
 

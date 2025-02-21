@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:workmanager/workmanager.dart';
 
 ///TOP-LEVEL FUNCTION PROVIDED FOR WORK MANAGER AS CALLBACK
+@pragma('vm:entry-point')
 void callbackDispatcher() {
   Workmanager().executeTask((dynamic task, dynamic inputData) async {
     print('Background Services are Working!');
@@ -17,7 +18,7 @@ void callbackDispatcher() {
         print('NUMBER     : ${entry.number}');
         print('NAME       : ${entry.name}');
         print('TYPE       : ${entry.callType}');
-        print('DATE       : ${DateTime.fromMillisecondsSinceEpoch(entry.timestamp)}');
+        print('DATE       : ${DateTime.fromMillisecondsSinceEpoch(entry.timestamp ?? 0)}');
         print('DURATION   : ${entry.duration}');
         print('ACCOUNT ID : ${entry.phoneAccountId}');
         print('ACCOUNT ID : ${entry.phoneAccountId}');
@@ -61,7 +62,7 @@ class _MyAppState extends State<MyApp> {
             Text('NUMBER     : ${entry.number}', style: mono),
             Text('NAME       : ${entry.name}', style: mono),
             Text('TYPE       : ${entry.callType}', style: mono),
-            Text('DATE       : ${DateTime.fromMillisecondsSinceEpoch(entry.timestamp)}',
+            Text('DATE       : ${DateTime.fromMillisecondsSinceEpoch(entry.timestamp ?? 0)}',
                 style: mono),
             Text('DURATION   : ${entry.duration}', style: mono),
             Text('ACCOUNT ID : ${entry.phoneAccountId}', style: mono),

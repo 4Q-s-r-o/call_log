@@ -154,7 +154,7 @@ public class CallLogPlugin implements FlutterPlugin, ActivityAware, MethodCallHa
     }
 
     /**
-     * Handler for flutter {@link MethodCall}
+     * Handler for flutter method call
      */
     private void handleMethodCall() {
         switch (request.method) {
