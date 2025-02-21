@@ -9,7 +9,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  cupertino_icons: ^1.0.5
+  cupertino_icons: ^1.0.8
   workmanager:
     git:
       url: https://github.com/4Q-s-r-o/flutter_workmanager.git

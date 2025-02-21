@@ -1,7 +1,6 @@
 group = "sk.fourq.calllog"
 version = "1.0"
 
-
 buildscript {
     repositories {
         mavenCentral()
