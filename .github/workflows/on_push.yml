@@ -33,6 +33,13 @@ jobs:
               echo "❌ Version ${VERSION} NOT found in CHANGELOG.md"
               exit 1
             fi
+      - uses: ClementTsang/delete-tag-and-release@v0.3.1
+        if: github.ref == 'refs/heads/master' && steps.autotag.outputs.tagname != '' && failure()
+        with:
+          delete_release: false
+          tag_name: ${{steps.autotag.outputs.tagname}}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Trigger publish
         if: github.ref == 'refs/heads/master' && steps.autotag.outputs.tagname != ''
         uses: peter-evans/repository-dispatch@v2
