@@ -1,0 +1,41 @@
+on: push
+
+name: Lint dart
+
+jobs:
+  build:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v1
+      - run: flutter pub get
+      - name: Analyze Dart
+        uses: zgosalvez/github-actions-analyze-dart@v3
+        with:
+          fail-on-warnings: true
+          fail-on-infos: true
+      - id: autotag
+        name: autotag
+        uses: jacopocarlini/action-autotag@master
+        if: github.ref == 'refs/heads/master'
+        with:
+          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+      - name: Check if version is in CHANGELOG.md
+        if: github.ref == 'refs/heads/master' && steps.autotag.outputs.tagname != ''
+        run: |
+            VERSION="${{steps.autotag.outputs.tagname}}"
+            if grep -q "${VERSION}" CHANGELOG.md; then
+              echo "✅ Version ${VERSION} found in CHANGELOG.md"
+            else
+              echo "❌ Version ${VERSION} NOT found in CHANGELOG.md"
+              exit 1
+            fi
+      - name: Trigger publish
+        if: github.ref == 'refs/heads/master' && steps.autotag.outputs.tagname != ''
+        uses: peter-evans/repository-dispatch@v2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          event-type: pub-publish
