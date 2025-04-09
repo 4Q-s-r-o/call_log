@@ -1,10 +1,10 @@
 on: push
 
-name: Lint dart
+name: On push
 
 jobs:
   build:
-    name: Lint
+    name: On push
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
