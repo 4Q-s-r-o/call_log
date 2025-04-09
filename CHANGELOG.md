@@ -1,3 +1,6 @@
+## 5.0.2
+* Throwing exception in case of missing permissions 
+* 
 ## 5.0.1
 * Fixed typo in changelog
 
