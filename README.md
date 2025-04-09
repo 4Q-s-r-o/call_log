@@ -18,8 +18,6 @@ You may add the following permission to your Android Manifest:
 This plugin is able to handle checking and requesting permission automatically.\
 Currently implemented query params are dateFrom, dateTo, durationFrom, durationTo, name and number.\
 String params are queried using LIKE and '%' wildcard on both sides.
- ## Note on deprecated api usage
-This plugin is still maintaining backward compatibility with v1 embedding. This means that gradle reports deprecated api usage during release build. When flutter removes v1 embedding in one of the future releases we will remove backwards compatibility. 
 
  ## Background execution
 
