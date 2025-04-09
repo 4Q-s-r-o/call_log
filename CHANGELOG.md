@@ -1,3 +1,6 @@
+## 5.0.4
+* Release to test automatic package upload from github-actions
+
 ## 5.0.3
 * Release to test automatic package upload from github-actions
 
