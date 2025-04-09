@@ -4,7 +4,8 @@ import 'package:flutter/services.dart';
 
 /// main call_log plugin class
 class CallLog {
-  static const Iterable<CallLogEntry> _EMPTY_RESULT = Iterable<CallLogEntry>.empty();
+  static const Iterable<CallLogEntry> _EMPTY_RESULT =
+      Iterable<CallLogEntry>.empty();
   static const MethodChannel _channel = MethodChannel('sk.fourq.call_log');
 
   /// Get all call history log entries. Permissions are handled automatically
@@ -40,8 +41,14 @@ class CallLog {
     String? cachedMatchedNumber,
     String? phoneAccountId,
   }) async {
-    assert(!(dateFrom != null && dateTimeFrom != null), 'use only one of dateTimeFrom/dateFrom');
-    assert(!(dateTo != null && dateTimeTo != null), 'use only one of dateTimeTo/dateTo');
+    assert(
+      !(dateFrom != null && dateTimeFrom != null),
+      'use only one of dateTimeFrom/dateFrom',
+    );
+    assert(
+      !(dateTo != null && dateTimeTo != null),
+      'use only one of dateTimeTo/dateTo',
+    );
 
     //NOTE: Since we are accepting date params both as timestamps and DateTime objects
     // we need to determine which one to use
@@ -64,8 +71,12 @@ class CallLog {
       'cachedMatchedNumber': cachedMatchedNumber,
       'phoneAccountId': phoneAccountId,
     };
-    final Iterable<dynamic>? records = await _channel.invokeMethod('query', params);
-    return records?.map((dynamic m) => CallLogEntry.fromMap(m)) ?? _EMPTY_RESULT;
+    final Iterable<dynamic>? records = await _channel.invokeMethod(
+      'query',
+      params,
+    );
+    return records?.map((dynamic m) => CallLogEntry.fromMap(m)) ??
+        _EMPTY_RESULT;
   }
 }
 

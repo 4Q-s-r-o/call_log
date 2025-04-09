@@ -18,7 +18,9 @@ void callbackDispatcher() {
         print('NUMBER     : ${entry.number}');
         print('NAME       : ${entry.name}');
         print('TYPE       : ${entry.callType}');
-        print('DATE       : ${DateTime.fromMillisecondsSinceEpoch(entry.timestamp ?? 0)}');
+        print(
+          'DATE       : ${DateTime.fromMillisecondsSinceEpoch(entry.timestamp ?? 0)}',
+        );
         print('DURATION   : ${entry.duration}');
         print('ACCOUNT ID : ${entry.phoneAccountId}');
         print('ACCOUNT ID : ${entry.phoneAccountId}');
@@ -62,8 +64,10 @@ class _MyAppState extends State<MyApp> {
             Text('NUMBER     : ${entry.number}', style: mono),
             Text('NAME       : ${entry.name}', style: mono),
             Text('TYPE       : ${entry.callType}', style: mono),
-            Text('DATE       : ${DateTime.fromMillisecondsSinceEpoch(entry.timestamp ?? 0)}',
-                style: mono),
+            Text(
+              'DATE       : ${DateTime.fromMillisecondsSinceEpoch(entry.timestamp ?? 0)}',
+              style: mono,
+            ),
             Text('DURATION   : ${entry.duration}', style: mono),
             Text('ACCOUNT ID : ${entry.phoneAccountId}', style: mono),
             Text('SIM NAME   : ${entry.simDisplayName}', style: mono),
@@ -85,7 +89,8 @@ class _MyAppState extends State<MyApp> {
                   padding: const EdgeInsets.all(8.0),
                   child: ElevatedButton(
                     onPressed: () async {
-                      final Iterable<CallLogEntry> result = await CallLog.query();
+                      final Iterable<CallLogEntry> result =
+                          await CallLog.query();
                       setState(() {
                         _callLogEntries = result;
                       });

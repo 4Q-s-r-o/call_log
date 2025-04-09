@@ -20,6 +20,7 @@ linter:
     - always_require_non_null_named_parameters
     - always_specify_types
     - annotate_overrides
+    - lines_longer_than_80_chars
     # NEMOZE SA ZAPNUT AK CHCEME MAT VZDY SPECIFIKOVANY TYP (always_specify_types)
     # - avoid_annotating_with_dynamic
     # VYPNUTE LEBO OD DART VERZIE 2.1 UZ NIE JE KONTROLA NA AS 'EXPENSIVE' PRE AOT MODE
