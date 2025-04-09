@@ -1,6 +1,9 @@
+## 5.0.3
+* Release to test automatic package upload from github-actions
+
 ## 5.0.2
-* Throwing exception in case of missing permissions 
-* 
+* Throwing exception in case of missing permissions
+
 ## 5.0.1
 * Fixed typo in changelog
 
