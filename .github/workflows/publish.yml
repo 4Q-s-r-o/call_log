@@ -2,8 +2,7 @@
 name: Publish to pub.dev
 
 on:
-  repository_dispatch:
-    types: [pub-publish]
+  workflow_dispatch:
 
 # Publish using the reusable workflow from dart-lang.
 jobs:
