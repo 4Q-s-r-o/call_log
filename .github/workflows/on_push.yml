@@ -37,16 +37,21 @@ jobs:
         if: github.ref == 'refs/heads/master' && steps.autotag.outputs.tagname != ''
         run: |
           echo "Triggering publish workflow for tag $TAG"
-          # Trigger the workflow; note that this command does not return a run id.
           gh workflow run publish.yml --ref "$TAG"
           
           echo "Waiting for the new publish workflow run to be available..."
+          NEW_RUN_URL=""
           NEW_RUN_ID=""
+          # Loop to poll for the URL of the newly triggered run
           for i in {1..10}; do
-            NEW_RUN_ID=$(gh run list --workflow publish.yml --branch "$TAG" --limit 1 --json id -q '.[0].id')
-            if [ -n "$NEW_RUN_ID" ]; then
-              echo "Found new run id: $NEW_RUN_ID"
-              break
+            NEW_RUN_URL=$(gh run list --workflow publish.yml --branch "$TAG" --limit 1 --json url -q '.[0].url')
+            if [ -n "$NEW_RUN_URL" ]; then
+              # Parse the run id from the URL; assumes URL format ends with the numeric run id.
+              NEW_RUN_ID=$(echo "$NEW_RUN_URL" | grep -oE '[0-9]+$')
+              if [ -n "$NEW_RUN_ID" ]; then
+                echo "Found new run id: $NEW_RUN_ID"
+                break
+              fi
             fi
             echo "Run id not available yet, waiting for 10 seconds..."
             sleep 10
