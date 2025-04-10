@@ -1,3 +1,6 @@
+## 5.0.5
+* Updated sdk constraints to allow flutter 3.27 and dart 3.6
+
 ## 5.0.4
 * Release to test automatic package upload from github-actions
 
