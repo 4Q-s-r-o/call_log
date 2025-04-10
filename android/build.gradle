@@ -22,7 +22,7 @@ rootProject.allprojects {
 apply plugin: "com.android.library"
 
 android {
-    compileSdk 35
+    compileSdk 34
     namespace "sk.fourq.calllog"
 
     compileOptions {

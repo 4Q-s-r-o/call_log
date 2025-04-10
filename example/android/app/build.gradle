@@ -29,7 +29,7 @@ if (keystorePropertiesFile.exists()) {
 }
 
 android {
-    compileSdk 35
+    compileSdk 34
 
     compileOptions {
         // Flag to enable support for the new language APIs
