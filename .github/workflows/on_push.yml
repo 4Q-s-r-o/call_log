@@ -35,7 +35,30 @@ jobs:
             fi
       - name: Trigger publish
         if: github.ref == 'refs/heads/master' && steps.autotag.outputs.tagname != ''
-        run: gh workflow run publish.yml --ref $TAG
+        run: |
+          echo "Triggering publish workflow for tag $TAG"
+          # Trigger the workflow; note that this command does not return a run id.
+          gh workflow run publish.yml --ref "$TAG"
+          
+          echo "Waiting for the new publish workflow run to be available..."
+          NEW_RUN_ID=""
+          for i in {1..10}; do
+            NEW_RUN_ID=$(gh run list --workflow publish.yml --branch "$TAG" --limit 1 --json id -q '.[0].id')
+            if [ -n "$NEW_RUN_ID" ]; then
+              echo "Found new run id: $NEW_RUN_ID"
+              break
+            fi
+            echo "Run id not available yet, waiting for 10 seconds..."
+            sleep 10
+          done
+          
+          if [ -z "$NEW_RUN_ID" ]; then
+            echo "Failed to retrieve the run id for publish workflow."
+            exit 1
+          fi
+          
+          echo "Waiting for the publish run $NEW_RUN_ID to complete..."
+          gh run watch "$NEW_RUN_ID" --exit-status
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TAG: ${{ steps.autotag.outputs.tagname }}
