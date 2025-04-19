@@ -13,23 +13,49 @@ You may add the following permission to your Android Manifest:
 
 ```xml
 <uses-permission android:name="android.permission.READ_CALL_LOG" />
+<uses-permission android:name="android.permission.WRITE_CALL_LOG" />
 ```
 
 This plugin is able to handle checking and requesting permission automatically.\
 Currently implemented query params are dateFrom, dateTo, durationFrom, durationTo, name and number.\
 String params are queried using LIKE and '%' wildcard on both sides.
 
- ## Background execution
+## Delete Call Logs
+
+You can delete specific call log entries or all call logs:
+
+```dart
+// Delete a specific call log entry
+int deletedCount = await CallLog.deleteCallLog(entry.id);
+
+// Delete all call logs
+int deletedCount = await CallLog.deleteAllCallLogs();
+```
+
+The methods return the number of entries deleted (1 for single deletion, total count for bulk deletion).
+
+## Import/Export Call Logs
+
+You can export all call logs to a JSON file and import them back:
+
+```dart
+// Export call logs to Downloads directory with timestamp
+Map<String, dynamic> result = await CallLog.exportCallLog();
+```
+
+The export method saves the file to the Downloads directory with a filename in the format `call_log_YYYYMMDD_HHMMSS.json`. The method returns a map containing the number of entries exported and the absolute path to the exported file.
+
+## Background execution
 
 This plugin may be used in flutter background engine, via plugins like WorkManager. But please note that it is impossible for plugin to request permission while it is executed in background. You have to manually request permissions READ_CALL_LOG and READ_PHONE_STATE
 
 ## Note on iOS support
 
-Unfortuynately iOS doesn't support queries of call log. More information here: https://stackoverflow.com/questions/33753644/is-there-an-ios-api-for-accessing-call-logs 
+Unfortuynately iOS doesn't support queries of call log. More information here: https://stackoverflow.com/questions/33753644/is-there-an-ios-api-for-accessing-call-logs
 
 ## Example
 
-``` dart
+```dart
 // IMPORT PACKAGE
 import 'package:call_log/call_log.dart';
 
@@ -58,6 +84,6 @@ Iterable<CallLogEntry> entries = await CallLog.query(
 
 ## Contribution and Support
 
-* Contributions are welcome!
-* If you want to contribute code please create a PR
-* If you find a bug or want a feature, please fill an issue
+- Contributions are welcome!
+- If you want to contribute code please create a PR
+- If you find a bug or want a feature, please fill an issue

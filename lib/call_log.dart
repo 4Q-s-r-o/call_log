@@ -14,6 +14,30 @@ class CallLog {
     return result?.map((dynamic m) => CallLogEntry.fromMap(m)) ?? _EMPTY_RESULT;
   }
 
+  /// Delete a specific call log entry by its ID
+  /// Returns the number of entries deleted (should be 1 if successful)
+  static Future<int> deleteCallLog(String id) async {
+    final int result =
+        await _channel.invokeMethod('delete', <String, String>{'id': id});
+    return result;
+  }
+
+  /// Delete all call logs
+  /// Returns the number of entries deleted
+  static Future<int> deleteAllCallLogs() async {
+    final int result = await _channel.invokeMethod('delete', null);
+    return result;
+  }
+
+  /// Export all call logs to a JSON file in the Downloads directory
+  /// Returns a map containing:
+  /// - count: number of entries exported
+  /// - path: absolute path to the exported file
+  static Future<Map<String, dynamic>> exportCallLog() async {
+    final dynamic result = await _channel.invokeMethod('export');
+    return Map<String, dynamic>.from(result);
+  }
+
   /// Query call history log entries
   /// dateFrom: unix timestamp. precision in millis. Use only one of dateFrom dateTimeFrom
   /// dateTo: unix timestamp. precision in millis. Use only one of dateTo dateTimeTo
@@ -109,6 +133,7 @@ class CallLogEntry {
     this.cachedNumberLabel,
     this.simDisplayName,
     this.phoneAccountId,
+    this.id,
   });
 
   /// constructor creating object from provided map
@@ -124,6 +149,7 @@ class CallLogEntry {
     cachedMatchedNumber = m['cachedMatchedNumber'];
     simDisplayName = m['simDisplayName'];
     phoneAccountId = m['phoneAccountId'];
+    id = m['_id'];
   }
 
   /// contact name
@@ -158,6 +184,9 @@ class CallLogEntry {
 
   /// PHONE account id
   String? phoneAccountId;
+
+  /// Call log entry ID
+  String? id;
 }
 
 /// All possible call types
