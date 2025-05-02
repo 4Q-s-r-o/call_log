@@ -1,3 +1,7 @@
+## 5.1.0
+* New feature: Export call log (bugrevealingbme)
+* New feature: Delete support (bugrevealingbme)
+
 ## 5.0.5
 * Updated sdk constraints to allow flutter 3.27 and dart 3.6
 

@@ -16,6 +16,19 @@ You may add the following permission to your Android Manifest:
 <uses-permission android:name="android.permission.WRITE_CALL_LOG" />
 ```
 
+Ensure that following options are present in your build.gradle:
+
+```
+compileOptions {
+......//
+coreLibraryDesugaringEnabled true
+}
+
+dependencies {
+coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.2.2'
+}
+```
+
 This plugin is able to handle checking and requesting permission automatically.\
 Currently implemented query params are dateFrom, dateTo, durationFrom, durationTo, name and number.\
 String params are queried using LIKE and '%' wildcard on both sides.
