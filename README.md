@@ -34,9 +34,9 @@ int deletedCount = await CallLog.deleteAllCallLogs();
 
 The methods return the number of entries deleted (1 for single deletion, total count for bulk deletion).
 
-## Import/Export Call Logs
+## Export Call Logs
 
-You can export all call logs to a JSON file and import them back:
+You can export all call logs to a JSON file:
 
 ```dart
 // Export call logs to Downloads directory with timestamp
