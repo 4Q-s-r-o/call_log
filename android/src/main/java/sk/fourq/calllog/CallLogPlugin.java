@@ -14,6 +14,8 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.embedding.engine.plugins.activity.ActivityAware;
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding;
@@ -30,7 +32,8 @@ import java.util.HashMap;
 import java.util.List;
 
 @TargetApi(Build.VERSION_CODES.M)
-public class CallLogPlugin implements FlutterPlugin, ActivityAware, MethodCallHandler, PluginRegistry.RequestPermissionsResultListener {
+public class CallLogPlugin
+        implements FlutterPlugin, ActivityAware, MethodCallHandler, PluginRegistry.RequestPermissionsResultListener {
 
     private static final String TAG = "flutter/CALL_LOG";
     private static final String ALREADY_RUNNING = "ALREADY_RUNNING";
@@ -38,6 +41,8 @@ public class CallLogPlugin implements FlutterPlugin, ActivityAware, MethodCallHa
     private static final String INTERNAL_ERROR = "INTERNAL_ERROR";
     private static final String METHOD_GET = "get";
     private static final String METHOD_QUERY = "query";
+    private static final String METHOD_DELETE = "delete";
+    private static final String METHOD_EXPORT = "export";
     private static final String OPERATOR_LIKE = "LIKE";
     private static final String OPERATOR_GT = ">";
     private static final String OPERATOR_LT = "<";
@@ -53,7 +58,8 @@ public class CallLogPlugin implements FlutterPlugin, ActivityAware, MethodCallHa
             CallLog.Calls.CACHED_NUMBER_TYPE,
             CallLog.Calls.CACHED_NUMBER_LABEL,
             CallLog.Calls.CACHED_MATCHED_NUMBER,
-            CallLog.Calls.PHONE_ACCOUNT_ID
+            CallLog.Calls.PHONE_ACCOUNT_ID,
+            CallLog.Calls._ID
     };
 
     private MethodCall request;
@@ -77,7 +83,7 @@ public class CallLogPlugin implements FlutterPlugin, ActivityAware, MethodCallHa
 
     @Override
     public void onDetachedFromEngine(@NonNull FlutterPluginBinding flutterPluginBinding) {
-        //NO-OP
+        // NO-OP
         Log.d(TAG, "onDetachedFromEngine");
     }
 
@@ -119,14 +125,17 @@ public class CallLogPlugin implements FlutterPlugin, ActivityAware, MethodCallHa
         request = c;
         result = r;
 
-        String[] perm = {Manifest.permission.READ_CALL_LOG, Manifest.permission.READ_PHONE_STATE};
+        String[] perm = { Manifest.permission.READ_CALL_LOG, Manifest.permission.READ_PHONE_STATE,
+                Manifest.permission.WRITE_CALL_LOG };
         if (hasPermissions(perm)) {
             handleMethodCall();
         } else {
             if (activity != null) {
                 ActivityCompat.requestPermissions(activity, perm, 0);
             } else {
-                r.error("MISSING_PERMISSIONS", "Permission READ_CALL_LOG or READ_PHONE_STATE is required for plugin. Hovewer, plugin is unable to request permission because of background execution.", null);
+                r.error("MISSING_PERMISSIONS",
+                        "Permission READ_CALL_LOG, WRITE_CALL_LOG or READ_PHONE_STATE is required for plugin. Hovewer, plugin is unable to request permission because of background execution.",
+                        null);
             }
         }
     }
@@ -134,7 +143,7 @@ public class CallLogPlugin implements FlutterPlugin, ActivityAware, MethodCallHa
     @Override
     public boolean onRequestPermissionsResult(int requestCode, String[] strings, int[] grantResults) {
         if (requestCode == 0) {
-            //CHECK IF ALL REQUESTED PERMISSIONS ARE GRANTED
+            // CHECK IF ALL REQUESTED PERMISSIONS ARE GRANTED
             for (int grantResult : grantResults) {
                 if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
                     if (result != null) {
@@ -192,6 +201,13 @@ public class CallLogPlugin implements FlutterPlugin, ActivityAware, MethodCallHa
                 }
                 queryLogs(StringUtils.join(predicates, " AND "));
                 break;
+            case METHOD_DELETE:
+                String id = request.argument("id");
+                deleteCallLog(id);
+                break;
+            case METHOD_EXPORT:
+                exportCallLog();
+                break;
             default:
                 result.notImplemented();
                 cleanup();
@@ -214,8 +230,7 @@ public class CallLogPlugin implements FlutterPlugin, ActivityAware, MethodCallHa
                 CURSOR_PROJECTION,
                 query,
                 null,
-                CallLog.Calls.DATE + " DESC"
-        )) {
+                CallLog.Calls.DATE + " DESC")) {
             List<HashMap<String, Object>> entries = new ArrayList<>();
             while (cursor != null && cursor.moveToNext()) {
                 HashMap<String, Object> map = new HashMap<>();
@@ -230,6 +245,7 @@ public class CallLogPlugin implements FlutterPlugin, ActivityAware, MethodCallHa
                 map.put("cachedMatchedNumber", cursor.getString(8));
                 map.put("simDisplayName", getSimDisplayName(subscriptions, cursor.getString(9)));
                 map.put("phoneAccountId", cursor.getString(9));
+                map.put("_id", cursor.getString(10));
                 entries.add(map);
             }
             result.success(entries);
@@ -293,6 +309,82 @@ public class CallLogPlugin implements FlutterPlugin, ActivityAware, MethodCallHa
             escapedValue = "'" + value + "'";
         }
         predicates.add(field + " " + operator + " " + escapedValue);
+    }
+
+    private void deleteCallLog(String id) {
+        try {
+            int rowsDeleted;
+            if (id != null) {
+                // Delete specific call log entry
+                rowsDeleted = ctx.getContentResolver().delete(
+                        CallLog.Calls.CONTENT_URI,
+                        CallLog.Calls._ID + " = ?",
+                        new String[] { id });
+            } else {
+                // Delete all call logs
+                rowsDeleted = ctx.getContentResolver().delete(
+                        CallLog.Calls.CONTENT_URI,
+                        null,
+                        null);
+            }
+            result.success(rowsDeleted);
+        } catch (Exception e) {
+            result.error(INTERNAL_ERROR, e.getMessage(), null);
+        }
+        cleanup();
+    }
+
+    private void exportCallLog() {
+        try {
+            // Get Downloads directory
+            java.io.File downloadsDir = android.os.Environment
+                    .getExternalStoragePublicDirectory(android.os.Environment.DIRECTORY_DOWNLOADS);
+
+            // Create filename with timestamp
+            java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyyMMdd_HHmmss",
+                    java.util.Locale.getDefault());
+            String timestamp = sdf.format(new java.util.Date());
+            String filename = "call_log_" + timestamp + ".json";
+            java.io.File file = new java.io.File(downloadsDir, filename);
+
+            List<HashMap<String, Object>> entries = new ArrayList<>();
+            try (Cursor cursor = ctx.getContentResolver().query(
+                    CallLog.Calls.CONTENT_URI,
+                    CURSOR_PROJECTION,
+                    null,
+                    null,
+                    CallLog.Calls.DATE + " DESC")) {
+                while (cursor != null && cursor.moveToNext()) {
+                    HashMap<String, Object> map = new HashMap<>();
+                    map.put("formattedNumber", cursor.getString(0));
+                    map.put("number", cursor.getString(1));
+                    map.put("callType", cursor.getInt(2));
+                    map.put("timestamp", cursor.getLong(3));
+                    map.put("duration", cursor.getInt(4));
+                    map.put("name", cursor.getString(5));
+                    map.put("cachedNumberType", cursor.getInt(6));
+                    map.put("cachedNumberLabel", cursor.getString(7));
+                    map.put("cachedMatchedNumber", cursor.getString(8));
+                    map.put("phoneAccountId", cursor.getString(9));
+                    map.put("_id", cursor.getString(10));
+                    entries.add(map);
+                }
+            }
+
+            // Write to file
+            try (java.io.FileWriter writer = new java.io.FileWriter(file)) {
+                Gson gson = new Gson();
+                writer.write(gson.toJson(entries));
+            }
+
+            HashMap<String, Object> response = new HashMap<>();
+            response.put("count", entries.size());
+            response.put("path", file.getAbsolutePath());
+            result.success(response);
+        } catch (Exception e) {
+            result.error(INTERNAL_ERROR, e.getMessage(), null);
+        }
+        cleanup();
     }
 
     /**
