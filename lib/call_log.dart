@@ -33,8 +33,11 @@ class CallLog {
   /// Returns a map containing:
   /// - count: number of entries exported
   /// - path: absolute path to the exported file
-  static Future<Map<String, dynamic>> exportCallLog() async {
-    final dynamic result = await _channel.invokeMethod('export');
+  static Future<Map<String, dynamic>> exportCallLog(String filename) async {
+    final Map<String, String?> params = <String, String?>{
+      'filename': filename,
+    };
+    final dynamic result = await _channel.invokeMethod('export', params);
     return Map<String, dynamic>.from(result);
   }
 

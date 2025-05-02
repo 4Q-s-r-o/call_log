@@ -206,7 +206,7 @@ public class CallLogPlugin
                 deleteCallLog(id);
                 break;
             case METHOD_EXPORT:
-                exportCallLog();
+                exportCallLog(request.argument("filename"));
                 break;
             default:
                 result.notImplemented();
@@ -334,19 +334,12 @@ public class CallLogPlugin
         cleanup();
     }
 
-    private void exportCallLog() {
+    private void exportCallLog(String filename) {
         try {
             // Get Downloads directory
             java.io.File downloadsDir = android.os.Environment
                     .getExternalStoragePublicDirectory(android.os.Environment.DIRECTORY_DOWNLOADS);
-
-            // Create filename with timestamp
-            java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyyMMdd_HHmmss",
-                    java.util.Locale.getDefault());
-            String timestamp = sdf.format(new java.util.Date());
-            String filename = "call_log_" + timestamp + ".json";
             java.io.File file = new java.io.File(downloadsDir, filename);
-
             List<HashMap<String, Object>> entries = new ArrayList<>();
             try (Cursor cursor = ctx.getContentResolver().query(
                     CallLog.Calls.CONTENT_URI,
