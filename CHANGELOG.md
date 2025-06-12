@@ -1,3 +1,8 @@
+## 6.0.0
+* Fixed simDisplayName output that was incorrect in some cases. Requires new permission.
+* Fixed permission error on newer androids
+* Flutter 3.32.3 has been tested to work with package
+
 ## 5.1.0
 * New feature: Export call log (bugrevealingbme)
 * New feature: Delete support (bugrevealingbme)

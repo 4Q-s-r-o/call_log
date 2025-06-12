@@ -1,6 +1,7 @@
 package sk.fourq.calllog;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
@@ -8,6 +9,9 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.os.Build;
 import android.provider.CallLog;
+import android.telecom.PhoneAccount;
+import android.telecom.PhoneAccountHandle;
+import android.telecom.TelecomManager;
 import android.telephony.SubscriptionInfo;
 import android.telephony.SubscriptionManager;
 import android.util.Log;
@@ -15,7 +19,6 @@ import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.embedding.engine.plugins.activity.ActivityAware;
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding;
@@ -30,6 +33,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @TargetApi(Build.VERSION_CODES.M)
 public class CallLogPlugin
@@ -67,6 +71,30 @@ public class CallLogPlugin
     private ActivityPluginBinding activityPluginBinding;
     private Activity activity;
     private Context ctx;
+    private final Map<String, String> accountIdToSimName = new HashMap<>();
+
+    public String getSimSlotNameFromAccountId(Context context, String accountIdToFind, List<SubscriptionInfo> subscriptions) {
+        TelecomManager telecomManager = (TelecomManager) context.getSystemService(Context.TELECOM_SERVICE);
+        if(accountIdToFind == null){
+            return  null;
+        } else {
+            if(accountIdToSimName.containsKey(accountIdToFind)){
+                return accountIdToSimName.get(accountIdToFind);
+            }
+            for (int index = 0; index < telecomManager.getCallCapablePhoneAccounts().size(); index++) {
+                PhoneAccountHandle account = telecomManager.getCallCapablePhoneAccounts().get(index);
+                PhoneAccount phoneAccount = telecomManager.getPhoneAccount(account);
+                String accountId = phoneAccount.getAccountHandle().getId();
+                if (accountIdToFind.equals(accountId)) {
+                    SubscriptionInfo simInfo = subscriptions.get(index);
+                    String simDisplayName = simInfo.getDisplayName().toString();
+                    accountIdToSimName.put(accountIdToFind, simDisplayName);
+                    return simDisplayName;
+                }
+            }
+        }
+        return accountIdToFind;
+    }
 
     private void init(BinaryMessenger binaryMessenger, Context applicationContext) {
         Log.d(TAG, "init. Messanger:" + binaryMessenger + " Context:" + applicationContext);
@@ -125,13 +153,18 @@ public class CallLogPlugin
         request = c;
         result = r;
 
-        String[] perm = { Manifest.permission.READ_CALL_LOG, Manifest.permission.READ_PHONE_STATE,
-                Manifest.permission.WRITE_CALL_LOG };
-        if (hasPermissions(perm)) {
+        List<String> permissions = new ArrayList<>(4);
+        permissions.add(Manifest.permission.READ_CALL_LOG);
+        permissions.add(Manifest.permission.READ_PHONE_STATE);
+        permissions.add(Manifest.permission.WRITE_CALL_LOG);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            permissions.add(Manifest.permission.READ_PHONE_NUMBERS);
+        }
+        if (hasPermissions(permissions)) {
             handleMethodCall();
         } else {
             if (activity != null) {
-                ActivityCompat.requestPermissions(activity, perm, 0);
+                ActivityCompat.requestPermissions(activity, permissions.toArray(new String[4]), 0);
             } else {
                 r.error("MISSING_PERMISSIONS",
                         "Permission READ_CALL_LOG, WRITE_CALL_LOG or READ_PHONE_STATE is required for plugin. Hovewer, plugin is unable to request permission because of background execution.",
@@ -166,8 +199,8 @@ public class CallLogPlugin
         }
     }
 
-    /**
-     * Handler for flutter method call
+    /***
+     * Handler for flutter {@link MethodCall}
      */
     private void handleMethodCall() {
         switch (request.method) {
@@ -219,6 +252,7 @@ public class CallLogPlugin
      *
      * @param query String with sql search condition
      */
+    @SuppressLint("Range")
     private void queryLogs(String query) {
         SubscriptionManager subscriptionManager = ContextCompat.getSystemService(ctx, SubscriptionManager.class);
         List<SubscriptionInfo> subscriptions = null;
@@ -243,7 +277,7 @@ public class CallLogPlugin
                 map.put("cachedNumberType", cursor.getInt(6));
                 map.put("cachedNumberLabel", cursor.getString(7));
                 map.put("cachedMatchedNumber", cursor.getString(8));
-                map.put("simDisplayName", getSimDisplayName(subscriptions, cursor.getString(9)));
+                map.put("simDisplayName", getSimSlotNameFromAccountId(ctx, cursor.getString(9), subscriptions));
                 map.put("phoneAccountId", cursor.getString(9));
                 map.put("_id", cursor.getString(10));
                 entries.add(map);
@@ -257,31 +291,12 @@ public class CallLogPlugin
     }
 
     /**
-     * Helper method that tries to obtian sim display name from accountId
-     *
-     * @param subscriptions Subscriptions - should represent sim cards
-     * @param accountId     Id of account to search for
-     * @return Name of the used sim card, null otherwise
-     */
-    private String getSimDisplayName(List<SubscriptionInfo> subscriptions, String accountId) {
-        if (accountId != null && subscriptions != null) {
-            for (SubscriptionInfo info : subscriptions) {
-                if (Integer.toString(info.getSubscriptionId()).equals(accountId) ||
-                        accountId.contains(info.getIccId())) {
-                    return String.valueOf(info.getDisplayName());
-                }
-            }
-        }
-        return null;
-    }
-
-    /**
      * Helper method to check if permissions were granted
      *
      * @param permissions Permissions to check
      * @return false, if any permission is not granted, true otherwise
      */
-    private boolean hasPermissions(String[] permissions) {
+    private boolean hasPermissions(List<String> permissions) {
         for (String perm : permissions) {
             if (PackageManager.PERMISSION_GRANTED != ContextCompat.checkSelfPermission(ctx, perm)) {
                 return false;

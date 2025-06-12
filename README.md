@@ -14,6 +14,7 @@ You may add the following permission to your Android Manifest:
 ```xml
 <uses-permission android:name="android.permission.READ_CALL_LOG" />
 <uses-permission android:name="android.permission.WRITE_CALL_LOG" />
+<uses-permission android:name="android.permission.READ_PHONE_NUMBERS" />
 ```
 
 Ensure that following options are present in your build.gradle:
@@ -32,6 +33,14 @@ coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.2.2'
 This plugin is able to handle checking and requesting permission automatically.\
 Currently implemented query params are dateFrom, dateTo, durationFrom, durationTo, name and number.\
 String params are queried using LIKE and '%' wildcard on both sides.
+
+## Migration to 6.0.0+
+Since 6.0.0, we also check permission ```android.permission.READ_PHONE_NUMBERS```, which is required for the simDisplayName to work in case of multiSim setups.
+
+Add new permission to your manifest:
+``` xml
+<uses-permission android:name="android.permission.READ_PHONE_NUMBERS" />
+```
 
 ## Delete Call Logs
 

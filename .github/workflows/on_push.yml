@@ -24,7 +24,7 @@ jobs:
         with:
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
       - name: Check if version is in CHANGELOG.md
-        if: github.ref == 'refs/heads/master' && steps.autotag.outputs.tagname != ''
+        if: github.ref == 'refs/heads/master' && github.event_name == 'push' && steps.autotag.outputs.tagname != ''
         run: |
             VERSION="${{steps.autotag.outputs.tagname}}"
             if grep -q "${VERSION}" CHANGELOG.md; then
@@ -34,7 +34,7 @@ jobs:
               exit 1
             fi
       - name: Trigger publish
-        if: github.ref == 'refs/heads/master' && steps.autotag.outputs.tagname != ''
+        if: github.ref == 'refs/heads/master' && github.event_name == 'push' && steps.autotag.outputs.tagname != ''
         run: |
           echo "Triggering publish workflow for tag $TAG"
           gh workflow run publish.yml --ref "$TAG"
@@ -68,7 +68,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TAG: ${{ steps.autotag.outputs.tagname }}
       - uses: ClementTsang/delete-tag-and-release@v0.3.1
-        if: github.ref == 'refs/heads/master' && steps.autotag.outputs.tagname != '' && failure()
+        if: github.ref == 'refs/heads/master' && github.event_name == 'push' && steps.autotag.outputs.tagname != '' && failure()
         with:
           delete_release: false
           tag_name: ${{steps.autotag.outputs.tagname}}
