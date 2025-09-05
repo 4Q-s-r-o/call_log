@@ -74,6 +74,9 @@ public class CallLogPlugin
     private final Map<String, String> accountIdToSimName = new HashMap<>();
 
     public String getSimSlotNameFromAccountId(Context context, String accountIdToFind, List<SubscriptionInfo> subscriptions) {
+        if(Build.VERSION.SDK_INT <= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            return null;
+        }
         TelecomManager telecomManager = (TelecomManager) context.getSystemService(Context.TELECOM_SERVICE);
         if(accountIdToFind == null){
             return  null;

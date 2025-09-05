@@ -1,3 +1,6 @@
+## 6.0.1
+* Fixed simDisplayName hanging on android 14 and lower. Will skip checking for simDisplayName on such devices
+
 ## 6.0.0
 * Fixed simDisplayName output that was incorrect in some cases. Requires new permission.
 * Fixed permission error on newer androids
